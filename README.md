@@ -6,6 +6,7 @@ Bring the grim darkness of the far future to your Home Assistant! This custom in
 
 * **🛡️ Warhammer 40k Lexicanum** - Concise, curated lore from the community-maintained wiki
 * **📖 Warhammer 40k Fandom Wiki** - Detailed, comprehensive articles from the largest WH40k wiki
+* **📜 Wahapedia** - 10th edition game rules, mechanics, stratagems, and faction-specific rules
 
 Each tool is optional and configurable via the integrations UI. No API keys required!
 
@@ -60,6 +61,8 @@ Now you can ask your assistant questions like:
 - "What are Space Marines?"
 - "Explain the Chaos Gods"
 - "What is the Eye of Terror?"
+- "How does the shooting phase work?"
+- "What stratagems do Space Marines have?"
 
 ---
 
@@ -109,10 +112,45 @@ Searches the [Warhammer 40k Fandom Wiki](https://warhammer40k.fandom.com), the l
 
 ---
 
+### 📜 Wahapedia
+
+Searches [Wahapedia](https://wahapedia.ru/wh40k10ed/) for Warhammer 40k 10th edition game rules. Look up game mechanics, phase rules, stratagems, abilities, detachment rules, and faction-specific rules.
+
+#### Requirements
+
+* No API key required
+* Scrapes and caches Wahapedia pages (24-hour cache)
+
+#### Configuration Steps
+
+1. Select "Wahapedia" during setup
+2. Configure the number of results to return (1-10)
+
+#### Options
+
+| Setting             | Required | Default | Description                     |
+|---------------------|----------|---------|---------------------------------|
+| `Number of Results` | ✅        | `3`     | Number of rule sections to return |
+
+#### Supported Factions
+
+The Wahapedia tool supports faction-specific rules for all major factions including:
+
+- Astra Militarum, Adeptus Mechanicus, Adeptus Custodes, Adepta Sororitas
+- Space Marines, Blood Angels, Dark Angels, Black Templars, Space Wolves, Deathwatch, Grey Knights
+- Imperial Knights, Imperial Agents
+- Chaos Space Marines, Death Guard, Thousand Sons, World Eaters, Chaos Daemons, Chaos Knights
+- Aeldari, Drukhari, Harlequins
+- Tyranids, Genestealer Cults
+- Orks, Necrons, T'au Empire, Leagues of Votann
+
+---
+
 ## Usage Examples
 
 Ask your Home Assistant about:
 
+### Lore (Lexicanum & Fandom)
 - **Factions**: "What are the Adeptus Mechanicus?", "Tell me about Orks"
 - **Characters**: "Who is Roboute Guilliman?", "Explain Abaddon the Despoiler"
 - **Events**: "What was the Horus Heresy?", "Describe the Fall of Cadia"
@@ -120,7 +158,14 @@ Ask your Home Assistant about:
 - **Technology**: "What is a Bolter?", "Explain Warp travel"
 - **Concepts**: "What is the Warp?", "Describe the Astronomican"
 
-The integration will automatically search both wikis if both are enabled, giving your assistant access to comprehensive lore information.
+### Game Rules (Wahapedia)
+- **Core Rules**: "How does the shooting phase work?", "Explain mortal wounds"
+- **Stratagems**: "What stratagems can Space Marines use?"
+- **Faction Rules**: "What are the Astra Militarum army rules?"
+- **Detachments**: "Tell me about the Gladius Task Force detachment"
+- **Abilities**: "What is the Feel No Pain ability?"
+
+The integration will search enabled sources based on the query, giving your assistant access to both comprehensive lore and game rules.
 
 ---
 
