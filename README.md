@@ -130,7 +130,7 @@ Searches [Wahapedia](https://wahapedia.ru/wh40k10ed/) for Warhammer 40k 10th edi
 
 | Setting             | Required | Default | Description                     |
 |---------------------|----------|---------|---------------------------------|
-| `Number of Results` | ✅        | `3`     | Number of rule sections to return |
+| `Number of Results` | ✅        | `1`     | Number of rule sections to return |
 
 #### Supported Factions
 
