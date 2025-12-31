@@ -25,7 +25,8 @@ CACHE_TTL_SECONDS = 86400
 
 
 def normalize_faction_name(faction: str) -> str | None:
-    """Normalize faction name to URL slug format.
+    """
+    Normalize faction name to URL slug format.
 
     Attempts to match user input to a known faction slug. First tries an exact
     match, then falls back to partial substring matching.
@@ -43,6 +44,7 @@ def normalize_faction_name(faction: str) -> str | None:
 
     Returns:
         Normalized faction slug if matched, None otherwise.
+
     """
     if not faction:
         return None
