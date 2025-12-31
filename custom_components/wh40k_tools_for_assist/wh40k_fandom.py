@@ -28,7 +28,8 @@ class SearchWh40kFandomTool(llm.Tool):
     parameters = vol.Schema(
         {
             vol.Required(
-                "query", description="The Warhammer 40k subject to search for (e.g., 'Chaos Space Marines', 'Roboute Guilliman', 'Battle of Calth')"
+                "query",
+                description="The Warhammer 40k subject to search for (e.g., 'Chaos Space Marines', 'Roboute Guilliman', 'Battle of Calth')",
             ): str,
         }
     )
@@ -120,9 +121,7 @@ class SearchWh40kFandomTool(llm.Tool):
                             else:
                                 extract = snippet
                     except Exception as e:
-                        _LOGGER.debug(
-                            "Failed to get full extract for %s: %s", title, e
-                        )
+                        _LOGGER.debug("Failed to get full extract for %s: %s", title, e)
                         extract = snippet
 
                     # Create the article URL

@@ -28,7 +28,8 @@ class SearchWh40kLexicanumTool(llm.Tool):
     parameters = vol.Schema(
         {
             vol.Required(
-                "query", description="The Warhammer 40k subject to search for (e.g., 'Space Marines', 'Emperor of Mankind', 'Horus Heresy')"
+                "query",
+                description="The Warhammer 40k subject to search for (e.g., 'Space Marines', 'Emperor of Mankind', 'Horus Heresy')",
             ): str,
         }
     )
@@ -120,9 +121,7 @@ class SearchWh40kLexicanumTool(llm.Tool):
                             else:
                                 extract = snippet
                     except Exception as e:
-                        _LOGGER.debug(
-                            "Failed to get full extract for %s: %s", title, e
-                        )
+                        _LOGGER.debug("Failed to get full extract for %s: %s", title, e)
                         extract = snippet
 
                     # Create the article URL

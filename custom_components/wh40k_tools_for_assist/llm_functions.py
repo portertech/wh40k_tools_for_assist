@@ -85,7 +85,9 @@ async def setup_llm_functions(hass: HomeAssistant, config_data: dict[str, Any]) 
     # Register the API with Home Assistant's LLM system
     try:
         if wh40k_api.get_enabled_tools():
-            hass.data[DOMAIN]["unregister_api"] = llm.async_register_api(hass, wh40k_api)
+            hass.data[DOMAIN]["unregister_api"] = llm.async_register_api(
+                hass, wh40k_api
+            )
     except Exception:
         _LOGGER.exception("Failed to register WH40k LLM API")
         raise

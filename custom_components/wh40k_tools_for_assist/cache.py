@@ -64,7 +64,9 @@ class SQLiteCache:
         if deleted:
             logger.debug("Cache cleanup ran, deleted %d expired entries", deleted)
 
-    def get(self, tool: str, params: dict | None, max_age: int | None = None) -> Any | None:
+    def get(
+        self, tool: str, params: dict | None, max_age: int | None = None
+    ) -> Any | None:
         """Retrieve a cached value by tool name and parameters."""
         self._cleanup()
         key = self._make_key(tool, params)
@@ -73,7 +75,8 @@ class SQLiteCache:
             now = int(time.time())
             cutoff = now - max_age
             cursor = self._conn.execute(
-                "SELECT data FROM cache WHERE key = ? AND created_at >= ?", (key, cutoff)
+                "SELECT data FROM cache WHERE key = ? AND created_at >= ?",
+                (key, cutoff),
             )
         else:
             cursor = self._conn.execute("SELECT data FROM cache WHERE key = ?", (key,))

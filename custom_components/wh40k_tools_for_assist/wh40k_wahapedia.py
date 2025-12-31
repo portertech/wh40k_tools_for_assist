@@ -81,9 +81,7 @@ def extract_sections_from_html(html: str, source_url: str) -> list[dict]:
     return sections
 
 
-def search_sections(
-    sections: list[dict], query: str, num_results: int
-) -> list[dict]:
+def search_sections(sections: list[dict], query: str, num_results: int) -> list[dict]:
     """Search sections for query matches, prioritizing title matches."""
     query_lower = query.lower()
     title_matches = []
@@ -164,7 +162,9 @@ class SearchWh40kWahapediaTool(llm.Tool):
                         f"Known factions include: {', '.join(WAHAPEDIA_FACTIONS[:10])}..."
                     }
                 urls = {
-                    faction_slug: WAHAPEDIA_FACTION_URL_TEMPLATE.format(slug=faction_slug)
+                    faction_slug: WAHAPEDIA_FACTION_URL_TEMPLATE.format(
+                        slug=faction_slug
+                    )
                 }
             else:
                 urls = WAHAPEDIA_RULES_URLS

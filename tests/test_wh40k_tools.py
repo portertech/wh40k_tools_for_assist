@@ -48,7 +48,9 @@ class TestExtractSectionsFromHtml:
 
     def test_extracts_sections(self, wahapedia_html_content: str) -> None:
         """Test that sections are extracted from HTML."""
-        sections = extract_sections_from_html(wahapedia_html_content, "https://test.com")
+        sections = extract_sections_from_html(
+            wahapedia_html_content, "https://test.com"
+        )
 
         assert len(sections) == 2
         assert sections[0]["title"] == "Shooting Phase"
@@ -57,7 +59,9 @@ class TestExtractSectionsFromHtml:
 
     def test_empty_html(self) -> None:
         """Test empty HTML returns empty list."""
-        sections = extract_sections_from_html("<html><body></body></html>", "https://test.com")
+        sections = extract_sections_from_html(
+            "<html><body></body></html>", "https://test.com"
+        )
         assert sections == []
 
 
@@ -118,11 +122,14 @@ class TestSearchWh40kLexicanumTool:
 
         llm_context = MagicMock()
 
-        with patch(
-            "custom_components.wh40k_tools_for_assist.wh40k_lexicanum.async_get_clientsession"
-        ) as mock_session, patch(
-            "custom_components.wh40k_tools_for_assist.wh40k_lexicanum.SQLiteCache"
-        ) as mock_cache:
+        with (
+            patch(
+                "custom_components.wh40k_tools_for_assist.wh40k_lexicanum.async_get_clientsession"
+            ) as mock_session,
+            patch(
+                "custom_components.wh40k_tools_for_assist.wh40k_lexicanum.SQLiteCache"
+            ) as mock_cache,
+        ):
             # Mock cache miss
             mock_cache_instance = MagicMock()
             mock_cache_instance.get.return_value = None
