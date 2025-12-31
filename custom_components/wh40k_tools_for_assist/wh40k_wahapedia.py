@@ -25,7 +25,25 @@ CACHE_TTL_SECONDS = 86400
 
 
 def normalize_faction_name(faction: str) -> str | None:
-    """Normalize faction name to URL slug format."""
+    """Normalize faction name to URL slug format.
+
+    Attempts to match user input to a known faction slug. First tries an exact
+    match, then falls back to partial substring matching.
+
+    Note: Partial matching returns the first match found in WAHAPEDIA_FACTIONS
+    list order. This means ambiguous inputs may produce unexpected results:
+    - "marines" -> "space-marines" (first match, not "chaos-space-marines")
+    - "knights" -> "imperial-knights" (first match, not "chaos-knights")
+    - "angels" -> "blood-angels" (first match, not "dark-angels")
+
+    For predictable results, users should provide exact faction names or slugs.
+
+    Args:
+        faction: User-provided faction name (e.g., "Space Marines", "astra-militarum")
+
+    Returns:
+        Normalized faction slug if matched, None otherwise.
+    """
     if not faction:
         return None
 
@@ -36,7 +54,10 @@ def normalize_faction_name(faction: str) -> str | None:
     if slug in WAHAPEDIA_FACTIONS:
         return slug
 
-    # Try partial match
+    # Try partial match - returns first match in WAHAPEDIA_FACTIONS order.
+    # This behavior is deterministic but may not match user intent for
+    # ambiguous queries (e.g., "knights" matches "imperial-knights" before
+    # "chaos-knights" based on list position in const.py).
     for known_faction in WAHAPEDIA_FACTIONS:
         if slug in known_faction or known_faction in slug:
             return known_faction
