@@ -9,8 +9,6 @@ import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.core import callback
 
-_LOGGER = logging.getLogger(__name__)
-
 from .const import (
     ADDON_NAME,
     CONF_WH40K_FANDOM_ENABLED,
@@ -25,6 +23,8 @@ from .const import (
 
 if TYPE_CHECKING:  # pragma: no cover
     from homeassistant.config_entries import ConfigEntry, OptionsFlow
+
+_LOGGER = logging.getLogger(__name__)
 
 # Home Assistant best practice: Use constants for step ids
 

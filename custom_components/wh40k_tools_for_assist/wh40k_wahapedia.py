@@ -201,19 +201,19 @@ class SearchWh40kWahapediaTool(llm.Tool):
                     _LOGGER.warning("Failed to fetch %s: %s", url, e)
                     continue
 
-            if not all_sections:
-                source = faction_input if faction_input else "core rules"
-                return {"result": f"No content found for {source}"}
-
-            # Search the sections
-            results = search_sections(all_sections, query, num_results)
-
-            if not results:
-                source = faction_input if faction_input else "core rules"
-                return {"result": f"No matches found for '{query}' in {source}"}
-
-            return {"results": results}
-
-        except Exception as e:
+        except Exception:
             _LOGGER.exception("Wahapedia search error")
-            return {"error": f"Error searching Wahapedia: {e!s}"}
+            return {"error": "Error searching Wahapedia"}
+
+        if not all_sections:
+            source = faction_input if faction_input else "core rules"
+            return {"result": f"No content found for {source}"}
+
+        # Search the sections
+        results = search_sections(all_sections, query, num_results)
+
+        if not results:
+            source = faction_input if faction_input else "core rules"
+            return {"result": f"No matches found for '{query}' in {source}"}
+
+        return {"results": results}
