@@ -3,7 +3,7 @@
     "step": {
       "user": {
         "title": "Configure WH40k Tools for Assist",
-        "description": "Select the Warhammer 40k services you want to enable.",
+        "description": "Select the Warhammer 40k lore and rule sources you want to enable.",
         "data": {
           "wh40k_lexicanum_enabled": "Enable Warhammer 40k Lexicanum",
           "wh40k_fandom_enabled": "Enable Warhammer 40k Fandom Wiki",
@@ -40,7 +40,7 @@
     "step": {
       "init": {
         "title": "WH40k Tools for Assist Options",
-        "description": "{current_services}\n\nConfigure which Warhammer 40k sources to enable.",
+        "description": "{current_services}\n\nConfigure which Warhammer 40k lore and rule sources to enable.",
         "data": {
           "wh40k_lexicanum_enabled": "Enable Warhammer 40k Lexicanum",
           "wh40k_fandom_enabled": "Enable Warhammer 40k Fandom Wiki",
