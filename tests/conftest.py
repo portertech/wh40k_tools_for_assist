@@ -1,158 +1,103 @@
-"""Test configuration for LLM Intents integration."""
+"""Test configuration for WH40k Tools for Assist integration."""
 
+from typing import Any
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers import intent
 
-from custom_components.llm_intents.const import (
-    CONF_BRAVE_API_KEY,
-    CONF_BRAVE_NUM_RESULTS,
-    CONF_GOOGLE_PLACES_API_KEY,
-    CONF_GOOGLE_PLACES_NUM_RESULTS,
-    CONF_WIKIPEDIA_NUM_RESULTS,
+from custom_components.wh40k_tools_for_assist.const import (
+    CONF_WH40K_FANDOM_ENABLED,
+    CONF_WH40K_FANDOM_NUM_RESULTS,
+    CONF_WH40K_LEXICANUM_ENABLED,
+    CONF_WH40K_LEXICANUM_NUM_RESULTS,
+    CONF_WH40K_WAHAPEDIA_ENABLED,
+    CONF_WH40K_WAHAPEDIA_NUM_RESULTS,
     DOMAIN,
 )
 
 
 @pytest.fixture
-def mock_hass():
-    """Mock HomeAssistant instance."""
+def mock_hass() -> MagicMock:
+    """Create a mock HomeAssistant instance."""
     hass = MagicMock(spec=HomeAssistant)
+    hass.data = {}
+    hass.config_entries = MagicMock()
     hass.async_create_task = AsyncMock()
     return hass
 
 
 @pytest.fixture
-def mock_config_entry_brave():
-    """Mock ConfigEntry for Brave Search."""
+def mock_config_entry() -> MagicMock:
+    """Create a mock ConfigEntry with all tools enabled."""
     entry = MagicMock(spec=ConfigEntry)
     entry.domain = DOMAIN
-    entry.entry_id = "test_brave_entry"
+    entry.entry_id = "test_entry"
     entry.data = {
-        CONF_BRAVE_API_KEY: "test_brave_api_key",
-        CONF_BRAVE_NUM_RESULTS: 3,
+        CONF_WH40K_LEXICANUM_ENABLED: True,
+        CONF_WH40K_LEXICANUM_NUM_RESULTS: 1,
+        CONF_WH40K_FANDOM_ENABLED: True,
+        CONF_WH40K_FANDOM_NUM_RESULTS: 1,
+        CONF_WH40K_WAHAPEDIA_ENABLED: True,
+        CONF_WH40K_WAHAPEDIA_NUM_RESULTS: 3,
     }
     entry.options = {}
     return entry
 
 
 @pytest.fixture
-def mock_config_entry_google_places():
-    """Mock ConfigEntry for Google Places."""
+def mock_config_entry_lexicanum_only() -> MagicMock:
+    """Create a mock ConfigEntry with only Lexicanum enabled."""
     entry = MagicMock(spec=ConfigEntry)
     entry.domain = DOMAIN
-    entry.entry_id = "test_google_places_entry"
+    entry.entry_id = "test_lexicanum_entry"
     entry.data = {
-        CONF_GOOGLE_PLACES_API_KEY: "test_google_places_api_key",
-        CONF_GOOGLE_PLACES_NUM_RESULTS: 2,
+        CONF_WH40K_LEXICANUM_ENABLED: True,
+        CONF_WH40K_LEXICANUM_NUM_RESULTS: 2,
+        CONF_WH40K_FANDOM_ENABLED: False,
+        CONF_WH40K_WAHAPEDIA_ENABLED: False,
     }
     entry.options = {}
     return entry
 
 
 @pytest.fixture
-def mock_config_entry_wikipedia():
-    """Mock ConfigEntry for Wikipedia."""
-    entry = MagicMock(spec=ConfigEntry)
-    entry.domain = DOMAIN
-    entry.entry_id = "test_wikipedia_entry"
-    entry.data = {
-        CONF_WIKIPEDIA_NUM_RESULTS: 1,
-    }
-    entry.options = {}
-    return entry
-
-
-@pytest.fixture
-def mock_intent_obj():
-    """Mock Intent object."""
-    intent_obj = MagicMock(spec=intent.Intent)
-    intent_obj.slots = {"query": {"value": "test query"}}
-
-    # Mock the response creation
-    mock_response = MagicMock(spec=intent.IntentResponse)
-    mock_response.response_type = None
-    mock_response.async_set_speech = MagicMock()
-    mock_response.async_set_card = MagicMock()
-
-    intent_obj.create_response.return_value = mock_response
-    return intent_obj
-
-
-@pytest.fixture
-def mock_aiohttp_session():
-    """Mock aiohttp ClientSession."""
-    session = AsyncMock()
-    response = AsyncMock()
-    response.raise_for_status = AsyncMock()
-    response.json = AsyncMock()
-    session.get.return_value.__aenter__.return_value = response
-    session.post.return_value.__aenter__.return_value = response
-    return session, response
-
-
-@pytest.fixture
-def brave_search_results():
-    """Sample Brave search results."""
-    return {
-        "web": {
-            "results": [
-                {
-                    "title": "Test Result 1",
-                    "description": "Test description 1",
-                    "url": "https://example.com/1",
-                    "extra_snippets": ["Snippet 1", "Snippet 2"],
-                },
-                {
-                    "title": "Test Result 2",
-                    "description": "Test description 2",
-                    "url": "https://example.com/2",
-                    "extra_snippets": ["Snippet 3"],
-                },
-            ]
-        }
-    }
-
-
-@pytest.fixture
-def google_places_results():
-    """Sample Google Places results."""
-    return {
-        "places": [
-            {
-                "displayName": {"text": "Test Place 1"},
-                "formattedAddress": "123 Test St, Test City, TC 12345",
-                "location": {"latitude": 40.7128, "longitude": -74.0060},
-            },
-            {
-                "displayName": {"text": "Test Place 2"},
-                "formattedAddress": "456 Test Ave, Test City, TC 67890",
-                "location": {"latitude": 40.7589, "longitude": -73.9851},
-            },
-        ]
-    }
-
-
-@pytest.fixture
-def wikipedia_search_results():
-    """Sample Wikipedia search results."""
+def lexicanum_search_results() -> dict[str, Any]:
+    """Sample Lexicanum search results."""
     return {
         "query": {
             "search": [
-                {"title": "Test Article 1"},
-                {"title": "Test Article 2"},
+                {"title": "Space Marines", "snippet": "The Space Marines are..."},
+                {"title": "Ultramarines", "snippet": "The Ultramarines are..."},
             ]
         }
     }
 
 
 @pytest.fixture
-def wikipedia_summary_result():
-    """Sample Wikipedia summary result."""
+def fandom_search_results() -> dict[str, Any]:
+    """Sample Fandom search results."""
     return {
-        "extract": "This is a test summary of the Wikipedia article.",
-        "title": "Test Article",
+        "query": {
+            "search": [
+                {"title": "Horus Heresy", "snippet": "The Horus Heresy was..."},
+                {"title": "Emperor of Mankind", "snippet": "The Emperor is..."},
+            ]
+        }
     }
+
+
+@pytest.fixture
+def wahapedia_html_content() -> str:
+    """Sample Wahapedia HTML content."""
+    return """
+    <html>
+    <body>
+        <h2>Shooting Phase</h2>
+        <p>In the Shooting phase, units can fire their ranged weapons.</p>
+        <h2>Charge Phase</h2>
+        <p>In the Charge phase, units can attempt to charge enemy units.</p>
+    </body>
+    </html>
+    """
