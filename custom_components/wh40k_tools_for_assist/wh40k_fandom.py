@@ -1,3 +1,5 @@
+"""Tool for searching Warhammer 40k Fandom Wiki."""
+
 import logging
 import re
 import urllib.parse
@@ -10,23 +12,24 @@ from homeassistant.util.json import JsonObjectType
 
 from .cache import SQLiteCache
 from .const import (
-    CONF_WH40K_LEXICANUM_NUM_RESULTS,
+    CONF_WH40K_FANDOM_NUM_RESULTS,
     DOMAIN,
 )
 
 _LOGGER = logging.getLogger(__name__)
 
 
-class SearchWh40kLexicanumTool(llm.Tool):
-    """Tool for searching Warhammer 40k Lexicanum."""
+class SearchWh40kFandomTool(llm.Tool):
+    """Tool for searching Warhammer 40k Fandom Wiki."""
 
-    name = "search_wh40k_lexicanum"
-    description = "Use this tool to retrieve Warhammer 40,000 lore and information from the Lexicanum wiki. This includes details about factions, characters, battles, planets, weapons, vehicles, and all other aspects of the Warhammer 40k universe."
+    name = "search_wh40k_fandom"
+    description = "Use this tool to retrieve Warhammer 40,000 lore and information from the Fandom Wiki. This includes detailed articles about factions, characters, battles, planets, weapons, vehicles, and all other aspects of the Warhammer 40k universe."
 
     parameters = vol.Schema(
         {
             vol.Required(
-                "query", description="The Warhammer 40k subject to search for (e.g., 'Space Marines', 'Emperor of Mankind', 'Horus Heresy')"
+                "query",
+                description="The Warhammer 40k subject to search for (e.g., 'Chaos Space Marines', 'Roboute Guilliman', 'Battle of Calth')",
             ): str,
         }
     )
@@ -43,9 +46,9 @@ class SearchWh40kLexicanumTool(llm.Tool):
         config_data = {**config_data, **entry.options}
 
         query = tool_input.tool_args["query"]
-        _LOGGER.info("Warhammer 40k Lexicanum search requested for: %s", query)
+        _LOGGER.info("Warhammer 40k Fandom Wiki search requested for: %s", query)
 
-        num_results = config_data.get(CONF_WH40K_LEXICANUM_NUM_RESULTS, 1)
+        num_results = config_data.get(CONF_WH40K_FANDOM_NUM_RESULTS, 1)
 
         try:
             session = async_get_clientsession(hass)
@@ -65,15 +68,16 @@ class SearchWh40kLexicanumTool(llm.Tool):
                 return cached_response
 
             async with session.get(
-                "https://wh40k.lexicanum.com/w/api.php",
+                "https://warhammer40k.fandom.com/api.php",
                 params=search_params,
             ) as resp:
                 if resp.status != 200:
                     _LOGGER.error(
-                        f"Warhammer 40k Lexicanum search received a HTTP {resp.status} error"
+                        "Warhammer 40k Fandom Wiki search received a HTTP %s error",
+                        resp.status,
                     )
                     return {
-                        "error": f"Warhammer 40k Lexicanum search error: {resp.status}"
+                        "error": f"Warhammer 40k Fandom Wiki search error: {resp.status}"
                     }
 
                 search_data = await resp.json()
@@ -81,7 +85,7 @@ class SearchWh40kLexicanumTool(llm.Tool):
 
                 if not search_results:
                     return {
-                        "result": f"No Warhammer 40k Lexicanum articles found for '{query}'"
+                        "result": f"No Warhammer 40k Fandom Wiki articles found for '{query}'"
                     }
 
                 # Get full content for each result
@@ -105,7 +109,7 @@ class SearchWh40kLexicanumTool(llm.Tool):
 
                     try:
                         async with session.get(
-                            "https://wh40k.lexicanum.com/w/api.php",
+                            "https://warhammer40k.fandom.com/api.php",
                             params=content_params,
                         ) as content_resp:
                             if content_resp.status == 200:
@@ -117,13 +121,11 @@ class SearchWh40kLexicanumTool(llm.Tool):
                             else:
                                 extract = snippet
                     except Exception as e:
-                        _LOGGER.debug(
-                            "Failed to get full extract for %s: %s", title, e
-                        )
+                        _LOGGER.debug("Failed to get full extract for %s: %s", title, e)
                         extract = snippet
 
                     # Create the article URL
-                    article_url = f"https://wh40k.lexicanum.com/wiki/{urllib.parse.quote(title.replace(' ', '_'))}"
+                    article_url = f"https://warhammer40k.fandom.com/wiki/{urllib.parse.quote(title.replace(' ', '_'))}"
 
                     results.append(
                         {"title": title, "summary": extract, "url": article_url}
@@ -134,6 +136,6 @@ class SearchWh40kLexicanumTool(llm.Tool):
 
                 return {"results": results}
 
-        except Exception as e:
-            _LOGGER.error("Warhammer 40k Lexicanum search error: %s", e)
-            return {"error": f"Error searching Warhammer 40k Lexicanum: {e!s}"}
+        except Exception:
+            _LOGGER.exception("Warhammer 40k Fandom Wiki search error")
+            return {"error": "Error searching Warhammer 40k Fandom Wiki"}
